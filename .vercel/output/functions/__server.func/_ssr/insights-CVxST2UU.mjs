@@ -1,0 +1,229 @@
+import { i as __toESM } from "../_runtime.mjs";
+import { u as require_react } from "../_libs/@floating-ui/react-dom+[...].mjs";
+import { M as require_jsx_runtime } from "../_libs/@radix-ui/react-alert-dialog+[...].mjs";
+import { t as Button } from "./button-BkEeRci-.mjs";
+import { t as toast } from "../_libs/sonner.mjs";
+import { l as Sparkles } from "../_libs/lucide-react.mjs";
+import { t as useMutation } from "../_libs/tanstack__react-query.mjs";
+import { A as useSettings, C as usePeriod, c as shortDate, i as kg, n as businessToday, r as inr, t as addDays } from "./data-BXdCoojx.mjs";
+import { n as PageHeader, r as Stat } from "./Stat-C4Ts9jut.mjs";
+import { r as summarize } from "./finance-3gIK0WeS.mjs";
+import { a as XAxis, c as CartesianGrid, d as Tooltip, i as YAxis, r as LineChart, s as Line, u as ResponsiveContainer } from "../_libs/recharts+[...].mjs";
+import { r as useServerFn, t as getInsights } from "./ai.functions-DOGbBQlF.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/insights-CVxST2UU.js
+var import_react = /* @__PURE__ */ __toESM(require_react());
+var import_jsx_runtime = require_jsx_runtime();
+function InsightsPage() {
+	const today = businessToday();
+	const from = addDays(today, -29);
+	const period = usePeriod(from, today);
+	const settings = useSettings();
+	const s = summarize(period.data);
+	const target = Number(settings.data?.target_margin_per_kg ?? 0);
+	const daily = (0, import_react.useMemo)(() => {
+		const map = /* @__PURE__ */ new Map();
+		for (let i = 29; i >= 0; i--) {
+			const d = addDays(today, -i);
+			map.set(d, {
+				date: d,
+				revenue: 0,
+				weight: 0
+			});
+		}
+		for (const r of period.data?.sales ?? []) {
+			const row = map.get(r.business_date);
+			if (row && (r.status ?? "active") === "active") {
+				row.revenue += Number(r.amount);
+				row.weight += Number(r.weight_kg);
+			}
+		}
+		return [...map.values()].map((r) => ({
+			...r,
+			label: shortDate(r.date),
+			rate: r.weight > 0 ? r.revenue / r.weight : 0
+		}));
+	}, [period.data, today]);
+	const withSales = daily.filter((d) => d.revenue > 0);
+	const best = withSales.reduce((b, d) => !b || d.revenue > b.revenue ? d : b, null);
+	const worst = withSales.reduce((b, d) => !b || d.revenue < b.revenue ? d : b, null);
+	const avgDaily = withSales.length ? withSales.reduce((a, d) => a + d.revenue, 0) / withSales.length : 0;
+	const run = useServerFn(getInsights);
+	const ai = useMutation({
+		mutationFn: () => run({ data: {
+			from,
+			to: today,
+			summary: {
+				revenue: Math.round(s.revenue),
+				chicken_sold_kg: Number(s.weightSold.toFixed(1)),
+				avg_sell_rate_per_kg: Math.round(s.avgSellRate),
+				avg_buy_rate_per_kg: Math.round(s.avgPurchaseRate),
+				expenses: Math.round(s.expensesTotal),
+				wastage_kg: Number(s.wastageKg.toFixed(2)),
+				wastage_cost: Math.round(s.wastageCost),
+				gross_profit: Math.round(s.grossProfit),
+				net_profit: Math.round(s.netProfit),
+				net_profit_per_kg: Math.round(s.netProfitPerKg),
+				cash_share_pct: s.revenue > 0 ? Math.round(s.cash / s.revenue * 100) : 0
+			},
+			categories: s.categoryTotals.slice(0, 12).map((c) => ({
+				name: c.name,
+				amount: Math.round(c.amount)
+			}))
+		} }),
+		onError: (e) => toast.error(e.message || "Could not generate advice")
+	});
+	const margin = s.avgSellRate - s.avgPurchaseRate;
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(PageHeader, {
+			title: "Insights",
+			description: "Last 30 days of trading"
+		}),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			className: "grid grid-cols-2 gap-3 lg:grid-cols-4",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Stat, {
+					label: "Margin per kg",
+					value: inr(margin),
+					tone: margin >= target ? "positive" : "caution",
+					sub: target > 0 ? `Target ${inr(target)}/kg` : "Sell rate − buy rate"
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Stat, {
+					label: "Average day",
+					value: inr(avgDaily),
+					sub: `${withSales.length} trading days`
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Stat, {
+					label: "Best day",
+					value: best ? inr(best.revenue) : "—",
+					sub: best ? shortDate(best.date) : void 0,
+					tone: "positive"
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Stat, {
+					label: "Slowest day",
+					value: worst ? inr(worst.revenue) : "—",
+					sub: worst ? shortDate(worst.date) : void 0
+				})
+			]
+		}),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			className: "mt-5 grid gap-4 lg:grid-cols-3",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "rounded-xl border bg-card p-4 shadow-[var(--shadow-card)] lg:col-span-2",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+						className: "text-sm font-semibold",
+						children: "Selling rate per kg"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						className: "mt-4 h-64 w-full",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ResponsiveContainer, {
+							width: "100%",
+							height: "100%",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(LineChart, {
+								data: daily,
+								margin: {
+									left: -12,
+									right: 4
+								},
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CartesianGrid, {
+										strokeDasharray: "3 3",
+										stroke: "hsl(var(--border))",
+										vertical: false
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(XAxis, {
+										dataKey: "label",
+										tick: { fontSize: 11 },
+										interval: "preserveStartEnd"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(YAxis, {
+										tick: { fontSize: 11 },
+										width: 60
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Tooltip, {
+										formatter: (v) => `${inr(v)}/kg`,
+										contentStyle: {
+											background: "hsl(var(--card))",
+											border: "1px solid hsl(var(--border))",
+											borderRadius: 12,
+											fontSize: 12
+										}
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Line, {
+										type: "monotone",
+										dataKey: "rate",
+										stroke: "hsl(var(--primary))",
+										strokeWidth: 2,
+										dot: false
+									})
+								]
+							})
+						})
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "mt-2 grid grid-cols-2 gap-3 text-sm sm:grid-cols-4",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(MiniStat, {
+								label: "Sold",
+								value: kg(s.weightSold, 1)
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(MiniStat, {
+								label: "Bought",
+								value: kg(s.purchaseWeight, 1)
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(MiniStat, {
+								label: "Wasted",
+								value: kg(s.wastageKg, 2)
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(MiniStat, {
+								label: "Cash share",
+								value: s.revenue > 0 ? `${Math.round(s.cash / s.revenue * 100)}%` : "—"
+							})
+						]
+					})
+				]
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "rounded-xl border bg-card p-4 shadow-[var(--shadow-card)]",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "flex items-center justify-between",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+						className: "text-sm font-semibold",
+						children: "AI advisor"
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+						size: "sm",
+						className: "h-9",
+						onClick: () => ai.mutate(),
+						disabled: ai.isPending || s.revenue === 0,
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Sparkles, { className: "size-4" }), ai.isPending ? "Thinking…" : "Get advice"]
+					})]
+				}), s.revenue === 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "mt-4 text-sm text-muted-foreground",
+					children: "Record some sales first and the advisor will read your numbers."
+				}) : ai.data?.text ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					className: "mt-3 space-y-2 text-sm leading-relaxed",
+					children: ai.data.text.split("\n").filter((l) => l.trim()).map((line, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						className: "rounded-lg bg-muted/50 px-3 py-2",
+						children: line.replace(/^[-*]\s*/, "")
+					}, i))
+				}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "mt-4 text-sm text-muted-foreground",
+					children: "Ask the advisor to review the last 30 days of buying, selling, expenses and wastage."
+				})]
+			})]
+		})
+	] });
+}
+function MiniStat({ label, value }) {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "rounded-lg bg-muted/50 px-3 py-2",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+			className: "text-[11px] uppercase tracking-wide text-muted-foreground",
+			children: label
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+			className: "num font-semibold",
+			children: value
+		})]
+	});
+}
+//#endregion
+export { InsightsPage as component };

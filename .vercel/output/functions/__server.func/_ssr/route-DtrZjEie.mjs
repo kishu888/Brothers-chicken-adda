@@ -1,0 +1,189 @@
+import { _ as useNavigate, f as Outlet, g as Link, l as useRouterState } from "../_libs/@tanstack/react-router+[...].mjs";
+import { M as require_jsx_runtime } from "../_libs/@radix-ui/react-alert-dialog+[...].mjs";
+import { t as cn } from "./utils-C_uf36nf.mjs";
+import { t as Button } from "./button-BkEeRci-.mjs";
+import { C as Ellipsis, c as Trash2, d as ShoppingCart, f as Settings, h as LogOut, j as Boxes, l as Sparkles, o as Truck, p as Receipt, r as Wallet, v as LayoutDashboard, x as FileChartColumnIncreasing, y as Files } from "../_libs/lucide-react.mjs";
+import { i as useQueryClient } from "../_libs/tanstack__react-query.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/route-DtrZjEie.js
+var import_jsx_runtime = require_jsx_runtime();
+var NAV = [
+	{
+		to: "/dashboard",
+		label: "Dashboard",
+		icon: LayoutDashboard
+	},
+	{
+		to: "/sales",
+		label: "Sales",
+		icon: ShoppingCart
+	},
+	{
+		to: "/purchases",
+		label: "Purchases",
+		icon: Truck
+	},
+	{
+		to: "/stock",
+		label: "Chicken Stock",
+		icon: Boxes
+	},
+	{
+		to: "/expenses",
+		label: "Expenses",
+		icon: Receipt
+	},
+	{
+		to: "/wastage",
+		label: "Wastage",
+		icon: Trash2
+	},
+	{
+		to: "/cash",
+		label: "Cash & Online",
+		icon: Wallet
+	},
+	{
+		to: "/reports",
+		label: "Reports",
+		icon: FileChartColumnIncreasing
+	},
+	{
+		to: "/insights",
+		label: "Insights",
+		icon: Sparkles
+	},
+	{
+		to: "/documents",
+		label: "Bills & Documents",
+		icon: Files
+	},
+	{
+		to: "/settings",
+		label: "Settings",
+		icon: Settings
+	}
+];
+var MOBILE_NAV = [
+	{
+		to: "/dashboard",
+		label: "Home",
+		icon: LayoutDashboard
+	},
+	{
+		to: "/sales",
+		label: "Sales",
+		icon: ShoppingCart
+	},
+	{
+		to: "/purchases",
+		label: "Buy",
+		icon: Truck
+	},
+	{
+		to: "/expenses",
+		label: "Expenses",
+		icon: Receipt
+	},
+	{
+		to: "/more",
+		label: "More",
+		icon: Ellipsis
+	}
+];
+function AppShell() {
+	const pathname = useRouterState({ select: (s) => s.location.pathname });
+	const navigate = useNavigate();
+	const qc = useQueryClient();
+	function signOut() {
+		localStorage.removeItem("demo_logged_in");
+		qc.clear();
+		navigate({
+			to: "/auth",
+			replace: true
+		});
+	}
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "min-h-screen bg-background",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("aside", {
+				className: "fixed inset-y-0 left-0 z-40 hidden w-64 border-r bg-sidebar lg:flex lg:flex-col",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "border-b px-5 py-5",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+								className: "text-[10px] font-semibold uppercase tracking-[0.25em] text-primary",
+								children: "Brothers"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
+								className: "text-xl font-bold",
+								children: "Chicken Adda"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+								className: "mt-1 text-xs text-muted-foreground",
+								children: "Bengaluru, Karnataka"
+							})
+						]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("nav", {
+						className: "flex-1 space-y-1 overflow-y-auto p-3",
+						children: NAV.map((item) => {
+							const activeItem = pathname.startsWith(item.to);
+							return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Link, {
+								to: item.to,
+								className: cn("flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors", activeItem ? "bg-sidebar-primary text-sidebar-primary-foreground" : "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"),
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(item.icon, { className: "size-[18px]" }), item.label]
+							}, item.to);
+						})
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						className: "border-t p-3",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+							variant: "ghost",
+							className: "w-full justify-start gap-3",
+							onClick: signOut,
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(LogOut, { className: "size-[18px]" }), "Sign out"]
+						})
+					})
+				]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("header", {
+				className: "sticky top-0 z-20 flex items-center justify-between border-b bg-card/90 px-4 py-3 backdrop-blur lg:hidden",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "text-[10px] uppercase tracking-[0.18em] text-primary",
+					children: "Brothers"
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
+					className: "text-base font-bold",
+					children: "Chicken Adda"
+				})] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+					variant: "ghost",
+					size: "icon",
+					onClick: signOut,
+					"aria-label": "Sign out",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(LogOut, { className: "size-5" })
+				})]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("main", {
+				className: "pb-24 lg:ml-64 lg:pb-8",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					className: "mx-auto w-full max-w-6xl p-4 sm:p-6",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Outlet, {})
+				})
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("nav", {
+				className: "fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t bg-card/95 backdrop-blur lg:hidden",
+				children: MOBILE_NAV.map((item) => {
+					const activeItem = pathname.startsWith(item.to);
+					return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Link, {
+						to: item.to,
+						className: cn("flex flex-col items-center gap-1 py-2.5 text-[11px] font-medium", activeItem ? "text-primary" : "text-muted-foreground"),
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(item.icon, { className: "size-5" }), item.label]
+					}, item.to);
+				})
+			})
+		]
+	});
+}
+var SplitComponent = AppShell;
+//#endregion
+export { SplitComponent as component };
